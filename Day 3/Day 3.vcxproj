@@ -46,6 +46,14 @@
   <ItemGroup>
     <Text Include="input.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\googletest\googletest\gtest.vcxproj">
+      <Project>{5012bf7c-bb04-3707-b4ac-e38aa4bbd0a3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\googletest\googletest\gtest_main.vcxproj">
+      <Project>{dfd27ba0-691b-3c4f-8014-0cf9aa059ea6}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -69,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>X64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
