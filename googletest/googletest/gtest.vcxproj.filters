@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\dpeterjohn\Documents\Project_Workspaces\AdventOfCode2019\googletest\googletest\src\gtest-all.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\dpeterjohn\Documents\Project_Workspaces\AdventOfCode2019\googletest\googletest\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{B361AA71-19B3-3C0E-9E99-9F9C6D627457}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

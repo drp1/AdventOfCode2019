@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\dpeterjohn\Documents\Project_Workspaces\AdventOfCode2019\googletest\CMakeFiles\38bbaaa699df45ba210d10012ba6f23a\RUN_TESTS_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{A6B655F7-B548-309D-8E21-806F19CB1F02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
