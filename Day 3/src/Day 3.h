@@ -1,5 +1,10 @@
 #include <string>
 #include "Wire.h"
-int FindClosestIntersection(std::string testInput);
-Wire GetWire1(std::string input);
-Wire GetWire2(std::string input);
+#include "WireSegment.h"
+#include "Point.h"
+#include <vector>
+
+int FindClosestIntersection(std::string const& input);
+std::vector<Wire> GetWires(std::string const& input);
+int FindDistanceFromPoint(Point central_point, std::list<WireIntersection>::value_type const& intersection);
+int FindShortestDistance(std::list<int> const& distances);

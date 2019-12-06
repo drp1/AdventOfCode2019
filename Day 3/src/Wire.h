@@ -1,6 +1,8 @@
 #pragma once
 #include <list>
-
+#include <vector>
+#include <string>
+#include "WireSegment.h"
 
 class WireIntersection;
 class WireSegment;
@@ -8,15 +10,13 @@ class WireSegment;
 class Wire
 {
 public:
-	Wire();
+	Wire(std::string const& directions);
 	~Wire();
 
-	std::list<WireSegment>& Segments() const;
+	std::vector<WireSegment> const& Segments() const;
 
-	class Test
-	{
-		
-	};
+private:
+	std::vector<WireSegment> segments;
 };
 
 class WireIntersection
@@ -25,14 +25,10 @@ public:
 	WireIntersection(WireSegment wire1_segment, WireSegment wire2_segment);
 };
 
-class WireSegment
-{
-public:
-	bool Intersects(WireSegment const& wire_segment);
-};
 
-class Point
+class WireVector
 {
 public:
-	Point(int x, int y);
+	
+	WireVector(std::string const& direction);
 };
