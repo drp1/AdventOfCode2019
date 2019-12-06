@@ -5,6 +5,7 @@
 #include <vector>
 
 int FindClosestIntersection(std::string const& input);
+std::list<Point> FindIntersections(Wire const& wire1, Wire const& wire2);
 std::vector<Wire> GetWires(std::string const& input);
-int FindDistanceFromPoint(Point central_point, std::list<WireIntersection>::value_type const& intersection);
+int FindDistanceFromPoint(Point const& central_point, Point const& intersection);
 int FindShortestDistance(std::list<int> const& distances);

@@ -51,9 +51,4 @@ std::vector<WireSegment> const& Wire::Segments() const
 
 
 
-WireIntersection::WireIntersection(WireSegment wire1_segment, WireSegment wire2_segment)
-{
-	// TODO
-}
-
 
