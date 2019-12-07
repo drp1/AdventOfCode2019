@@ -2,6 +2,7 @@
 #include <list>
 
 #include "gtest/gtest.h"
+#include <fstream>
 
 using namespace std;
 
@@ -25,6 +26,19 @@ TEST(Day3TestSuite, ExampleInput3Test)
 	auto const expectedDistance = 135;
 	EXPECT_EQ(expectedDistance, FindClosestIntersection(testInput));
 }
+
+TEST(Day3TestSuite, Part1Answer)
+{
+	std::ifstream ifs("src/input.txt");
+	std::string input((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+	
+	string const testInput = "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7";
+	auto const expectedDistance = 135;
+
+	auto part1Distance = FindClosestIntersection(input);
+	cout << "Part 1 Distance: " << part1Distance;
+}
+
 
 TEST(Day3TestSuite, GetWires_Should_Return_Wires)
 {
