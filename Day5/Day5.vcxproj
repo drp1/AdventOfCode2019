@@ -41,6 +41,9 @@
   <ItemGroup>
     <Text Include="src\input.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Day5.h" />
+  </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
