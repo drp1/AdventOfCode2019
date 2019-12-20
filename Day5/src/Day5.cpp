@@ -114,6 +114,7 @@ TEST(Day5TestSuite, Add_Code_Should_Store_At_Position)
 {
 	IntCodeProgram program;
 	program.instructions = vector<int>({ 1,4,5,6,10,	11,0 });
+	program.position = 0;
 	IntCodeAdd(program);
 	EXPECT_EQ(program.instructions[6], 10 + 11);
 }
@@ -126,10 +127,12 @@ TEST(Day5TestSuite, Add_Code_Should_Use_Immediate_Values)
 	EXPECT_EQ(program.instructions[4], 13 + 11);
 
 	program.instructions = vector<int>({ 1001,4,9,5,16,0 });
+	program.position = 0;
 	IntCodeAdd(program);
 	EXPECT_EQ(program.instructions[5], 16 + 9);
 
 	program.instructions = vector<int>({ 101,7,4,5,11,0 });
+	program.position = 0;
 	IntCodeAdd(program);
 	EXPECT_EQ(program.instructions[5], 7 + 11);
 }
@@ -146,14 +149,17 @@ TEST(Day5TestSuite, Multiply_Code_Should_Use_Immediate_Values)
 {
 	IntCodeProgram program;
 	program.instructions = vector<int>({ 1102,13,11,4,0 });
+	program.position = 0;
 	IntCodeMultiply(program);
 	EXPECT_EQ(program.instructions[4], 13 * 11);
 
 	program.instructions = vector<int>({ 1001,4,9,5,16,0 });
+	program.position = 0;
 	IntCodeMultiply(program);
 	EXPECT_EQ(program.instructions[5], 16 * 9);
 
 	program.instructions = vector<int>({ 101,7,4,5,11,0 });
+	program.position = 0;
 	IntCodeMultiply(program);
 	EXPECT_EQ(program.instructions[5], 7 * 11);
 }
@@ -163,7 +169,7 @@ TEST(Day5TestSuite, Part1)
 	// Read program from file
 	auto const inputFilePath = "src/input.txt";
 	IntCodeProgram program;
-	
+	string programOutput;
 	if(ReadFile(inputFilePath, program))
 	{
 
@@ -185,7 +191,7 @@ TEST(Day5TestSuite, Part1)
 				IntCodeInput(program, 1);
 				break;
 			case Opcode::Output:
-				cout << IntCodeOutput(program);
+				programOutput.append(to_string(IntCodeOutput(program)));
 				break;
 			case Opcode::Exit:
 				break;
@@ -193,10 +199,10 @@ TEST(Day5TestSuite, Part1)
 				throw 1;
 			}
 
-			AdvanceProgram(program);
 		}	while (opcode != Opcode::Exit);
 	}
-	
+
+	EXPECT_EQ("0000000006745903", programOutput);
 }
 
 
@@ -232,24 +238,6 @@ int GetDigitLength(int const instruction)
 	return digitLength;
 }
 
-void AdvanceProgram(IntCodeProgram& program)
-{
-	switch (GetOpCode(program)) {
-	case Opcode::Add:
-	case Opcode::Multiply:
-		program.position += 4;
-		break;
-	case Opcode::Input:
-	case Opcode::Output:
-		program.position += 2;
-		break;
-	case Opcode::Exit:
-		program.position += 1;
-	default:
-		break;
-	}
-}
-
 int GetParameterValue(IntCodeProgram& program, int const index)
 {
 	int address;
@@ -270,11 +258,14 @@ void IntCodeInput(IntCodeProgram& program, int const input)
 	if (writeIndex >= program.instructions.size())
 		throw std::out_of_range(string(__FUNCTION__) + ": Out of range");
 	program.instructions[writeIndex] = input;
+	program.position += 2; // Advance instruction pointer
 }
 
 int IntCodeOutput(IntCodeProgram& program)
 {
-	return GetParameterValue(program, 0);
+	int const output = GetParameterValue(program, 0);
+	program.position += 2; // Advance instruction pointer
+	return output;
 }
 
 void IntCodeAdd(IntCodeProgram& program)
@@ -285,6 +276,7 @@ void IntCodeAdd(IntCodeProgram& program)
 	if (writeIndex >= program.instructions.size())
 		throw std::out_of_range(string(__FUNCTION__) + ": Out of range");
 	program.instructions[writeIndex] = param1 + param2;
+	program.position += 4; // Advance instruction pointer
 }
 
 void IntCodeMultiply(IntCodeProgram& program)
@@ -295,7 +287,55 @@ void IntCodeMultiply(IntCodeProgram& program)
 	if (writeIndex >= program.instructions.size())
 		throw std::out_of_range(string(__FUNCTION__) + ": Out of range");
 	program.instructions[writeIndex] = param1 * param2;
+	program.position += 4; // Advance instruction pointer
 }
+
+void IntCodeJumpIfTrue(IntCodeProgram& program)
+{
+	int const param1 = GetParameterValue(program, 0);
+	int const param2 = GetParameterValue(program, 1);
+	if (param1 != 0)
+	{
+		program.position = param2;
+		return;
+	}
+	program.position += 3; // Advance instruction pointer
+}
+
+void IntCodeJumpIfFalse(IntCodeProgram& program)
+{
+	int const param1 = GetParameterValue(program, 0);
+	int const param2 = GetParameterValue(program, 1);
+	if (param1 == 0)
+	{
+		program.position = param2;
+		return;
+	}
+	program.position += 3; // Advance instruction pointer
+}
+
+void IntCodeLessThan(IntCodeProgram& program)
+{
+	int const param1 = GetParameterValue(program, 0);
+	int const param2 = GetParameterValue(program, 1);
+	int const writeIndex = program.instructions[program.position + 3];
+	if (writeIndex >= program.instructions.size())
+		throw std::out_of_range(string(__FUNCTION__) + ": Out of range");
+	program.instructions[writeIndex] = (param1 < param2 ? 1 : 0);
+	program.position += 4; // Advance instruction pointer
+}
+
+void IntCodeEquals(IntCodeProgram& program)
+{
+	int const param1 = GetParameterValue(program, 0);
+	int const param2 = GetParameterValue(program, 1);
+	int const writeIndex = program.instructions[program.position + 3];
+	if (writeIndex >= program.instructions.size())
+		throw std::out_of_range(string(__FUNCTION__) + ": Out of range");
+	program.instructions[writeIndex] = (param1 == param2 ? 1 : 0);
+	program.position += 4; // Advance instruction pointer
+}
+
 
 bool ReadFile(string const& filePath, IntCodeProgram& program)
 {

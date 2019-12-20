@@ -14,6 +14,10 @@ enum class Opcode {
 	Multiply = 2,
 	Input = 3,
 	Output = 4,
+	JumpIfTrue = 5,
+	JumpIfFalse = 6,
+	LessThan = 7,
+	Equals = 8,
 	Exit = 99
 };
 
@@ -23,7 +27,6 @@ struct IntCodeProgram
 	int position = 0;
 };
 
-void AdvanceProgram(IntCodeProgram& program);
 int GetParameterValue(IntCodeProgram& program, int index);
 ParameterMode GetParameterCode(int instruction, int index);
 Opcode GetOpCode(IntCodeProgram const& program);
