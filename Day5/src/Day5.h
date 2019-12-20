@@ -20,22 +20,24 @@ enum class Opcode {
 struct IntCodeProgram
 {
 	std::vector<int> instructions;
-	int position;
+	int position = 0;
 };
 
+void AdvanceProgram(IntCodeProgram& program);
 int GetParameterValue(IntCodeProgram& program, int index);
 ParameterMode GetParameterCode(int instruction, int index);
 Opcode GetOpCode(IntCodeProgram const& program);
 Opcode GetOpCode(int instruction);
 int GetDigitLength(int instruction);
-int GetDigit(int num, int index);
-void IntCodeAdd(std::vector<int>& program, int const baseIndex);
-void IntCodeMultiply(std::vector<int>& program, int const baseIndex);
-Opcode GetNextOpcode(std::vector<int> const& program, int const baseIndex);
-int InstructionPointerIncreaseAmount(Opcode const instruction);
+int GetDigit(int num, int digitPosition);
 
-// @returns length of intCodeProgram
-bool ReadFile(std::string const filePath, std::vector<int>& program);
-bool IsNounAndVerbTheAnswer(std::vector<int>& program, int noun, int verb);
+void IntCodeInput(IntCodeProgram& program, int input);
+int IntCodeOutput(IntCodeProgram& program);
+void IntCodeAdd(IntCodeProgram& program);
+void IntCodeMultiply(IntCodeProgram& program);
+
+Opcode GetNextOpcode(std::vector<int> const& program, int baseIndex);
+
+bool ReadFile(std::string const& filePath, IntCodeProgram& program);
 
 #endif 
