@@ -14,10 +14,16 @@
     <ClCompile Include="src\Day5.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="Day5Tests.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Day5.h">
       <Filter>src</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

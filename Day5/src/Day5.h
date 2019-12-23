@@ -27,6 +27,7 @@ struct IntCodeProgram
 	int position = 0;
 };
 
+int CreateInstruction(Opcode opcode, int param1Mode = 0, int param2Mode = 0);
 int GetParameterValue(IntCodeProgram& program, int index);
 ParameterMode GetParameterCode(int instruction, int index);
 Opcode GetOpCode(IntCodeProgram const& program);
@@ -38,6 +39,11 @@ void IntCodeInput(IntCodeProgram& program, int input);
 int IntCodeOutput(IntCodeProgram& program);
 void IntCodeAdd(IntCodeProgram& program);
 void IntCodeMultiply(IntCodeProgram& program);
+void IntCodeJumpIfTrue(IntCodeProgram& program);
+void IntCodeJumpIfFalse(IntCodeProgram& program);
+void IntCodeLessThan(IntCodeProgram& program);
+void IntCodeEquals(IntCodeProgram& program);
+
 
 Opcode GetNextOpcode(std::vector<int> const& program, int baseIndex);
 
