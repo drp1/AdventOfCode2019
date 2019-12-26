@@ -12,6 +12,9 @@
     <Text Include="src\TestInput1.txt">
       <Filter>src</Filter>
     </Text>
+    <Text Include="src\TestInput2.txt">
+      <Filter>src</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Day6.h">
@@ -25,6 +28,8 @@
     <ClCompile Include="src\Day6Tests.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

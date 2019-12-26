@@ -7,10 +7,9 @@ using namespace std;
 using namespace testing;
 
 
-TEST(Day6TestSuite, Should_Parse_All_Lines_In_File)
+DiGraph BuildGraph(string const& filePath)
 {
 	DiGraph graph;
-	string const filePath = "src/TestInput1.txt";
 	ifstream fin(filePath);
 	if (!fin.is_open())
 		throw exception("File not found");
@@ -21,6 +20,14 @@ TEST(Day6TestSuite, Should_Parse_All_Lines_In_File)
 		graph.AddEdge(line);
 	}
 	fin.close();
+
+	return graph;
+}
+
+TEST(Day6TestSuite, Should_Parse_All_Lines_In_File)
+{
+	string const filePath = "src/TestInput1.txt";
+	DiGraph graph = BuildGraph(filePath);
 
 	EXPECT_THAT(graph.GetConnectedEdges("COM"), UnorderedElementsAre("B"));
 	EXPECT_THAT(graph.GetConnectedEdges("B"), UnorderedElementsAre("C", "G"));
@@ -36,21 +43,10 @@ TEST(Day6TestSuite, Should_Parse_All_Lines_In_File)
 	EXPECT_THAT(graph.GetConnectedEdges("L"), IsEmpty());
 }
 
-
 TEST(Day6TestSuite, Should_Sum_Direct_And_Indirect_Orbits)
 {
-	DiGraph graph;
 	string const filePath = "src/TestInput1.txt";
-	ifstream fin(filePath);
-	if (!fin.is_open())
-		throw exception("File not found");
-
-	string line;
-	while (getline(fin, line))
-	{
-		graph.AddEdge(line);
-	}
-	fin.close();
+	DiGraph graph = BuildGraph(filePath);
 
 	int const expectedOrbitSum = 42;
 	EXPECT_EQ(graph.GetOrbitSum(), expectedOrbitSum);
@@ -59,21 +55,47 @@ TEST(Day6TestSuite, Should_Sum_Direct_And_Indirect_Orbits)
 
 TEST(Day6TestSuite, Part1)
 {
-	DiGraph graph;
 	string const filePath = "src/input.txt";
-	ifstream fin(filePath);
-	if (!fin.is_open())
-		throw exception("File not found");
-
-	string line;
-	while (getline(fin, line))
-	{
-		graph.AddEdge(line);
-	}
-	fin.close();
-
+	DiGraph graph = BuildGraph(filePath);
+	
 	int const expectedOrbitSum = 453028;
 	int const actualOutput = graph.GetOrbitSum();
 	cout << "Output: " << actualOutput << endl;
 	EXPECT_EQ(actualOutput, expectedOrbitSum);
+}
+
+
+TEST(Day6TestSuite, Should_Find_Route_To_Target)
+{
+	string const filePath = "src/TestInput2.txt";
+	DiGraph graph = BuildGraph(filePath);
+	
+	vector<string> actualRouteYou = graph.FindRoute("YOU");
+	EXPECT_THAT(actualRouteYou, ElementsAre("COM", "B", "C", "D", "E","J","K"));
+	
+	actualRouteYou = graph.FindRoute("SAN");
+	EXPECT_THAT(actualRouteYou, ElementsAre("COM", "B", "C", "D", "I"));
+}
+
+
+TEST(Day6TestSuite, Should_Find_Minimum_Orbit_Distance_Between_Objects)
+{
+	string const filePath = "src/TestInput2.txt";
+	DiGraph graph = BuildGraph(filePath);
+
+	int const expectedMinDistance = 4;
+	int const actualMinDistance = graph.FindMinOrbitDistance("YOU", "SAN");
+	EXPECT_EQ(actualMinDistance, expectedMinDistance);
+}
+
+TEST(Day6TestSuite, Part2)
+{
+	string const filePath = "src/input.txt";
+	DiGraph graph = BuildGraph(filePath);
+
+
+	//int expectedMinDistance = 4;
+	int const actualMinDistance = graph.FindMinOrbitDistance("YOU", "SAN");
+	cout << "Output: " << actualMinDistance << endl;
+	//EXPECT_EQ(actualMinDistance, expectedMinDistance);
 }

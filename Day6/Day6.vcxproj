@@ -38,6 +38,7 @@
   <ItemGroup>
     <Text Include="src\input.txt" />
     <Text Include="src\TestInput1.txt" />
+    <Text Include="src\TestInput2.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Day6.h" />
