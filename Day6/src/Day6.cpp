@@ -5,102 +5,125 @@
 #include <stack>
 using namespace std;
 
-//DiGraph::DiGraph(string const& filePath)
-//{
-//	ifstream fin(filePath);
-//	if (!fin.is_open())
-//		throw exception("File not found");
-//
-//	string line;
-//	while (getline(fin, line))
-//	{
-//		AddEdge(line);
-//	}
-//	fin.close();
-//}
-//
+OrbitTree::OrbitTree()
+{
+	root = new Node("COM");
+	stringToNodeMap[root->GetData()] = root;
+}
 
-void DiGraph::AddEdge(string const& text)
+void OrbitTree::AddEdge(string const& text)
 {
 	int const separator = text.find(')');
-	string const start = text.substr(0, separator);
-	string const end = text.substr(separator + 1, text.length() - separator - 1);
+	string const parentStr = text.substr(0, separator);
+	string const childStr = text.substr(separator + 1, text.length() - separator - 1);
 
-	if (adjList.find(start) == adjList.end())
+	Node* childNode;
+	Node* parentNode;
+	
+	if(stringToNodeMap.find(parentStr) == stringToNodeMap.end())
 	{
-		adjList[start] = vector<string>();
+		// Parent doesn't exist
+		parentNode = new Node(parentStr);
+		stringToNodeMap[parentStr] = parentNode;
 	}
-	adjList[start].push_back(end);
+	else
+	{
+		parentNode = stringToNodeMap[parentStr];
+	}
+	
+	if (stringToNodeMap.find(childStr) == stringToNodeMap.end())
+	{
+		// Child doesn't exist
+		childNode = new Node(childStr);
+		stringToNodeMap[childStr] = childNode;
+	}
+	else
+	{
+		childNode = stringToNodeMap[childStr];
+	}
+	
+	
+	childNode->SetParent(parentNode);
+	parentNode->AddChild(childNode);
 }
 
 
-int DiGraph::GetOrbitSum()
+int OrbitTree::GetOrbitSum() const
 {
-	string const root = "COM";
 	int const depth = 1;
 	int const sum = GetOrbitSum(root, depth);
 	return sum;
 }
 
-int DiGraph::GetOrbitSum(string const& key, int const depth)
+int OrbitTree::GetOrbitSum(Node const* parent, int const depth) const
 {
 	int sum = 0;
-	for (auto const& value : adjList[key])
+	for (auto const* child : parent->GetChildren())
 	{
-		if (adjList.find(value) != adjList.end())
+		if (child->GetNumberOfChildren() > 0)
 		{
-			sum += GetOrbitSum(value, depth + 1);
+			sum += GetOrbitSum(child, depth + 1);
 		}
 		sum += depth;
 	}
 	return sum;
 }
 
-std::vector<std::string> DiGraph::GetConnectedEdges(string const& edge)
+std::vector<std::string> OrbitTree::GetChildren(std::string target)
 {
-	//if (adjList.find(edge) == adjList.end())
-	//	throw exception("No element");
-	return adjList[edge];
-}
-
-std::vector<std::string> DiGraph::FindRoute(string const& target)
-{
-	vector<string> route;
-	string const root = "COM";
-	
-	stack<string> pathStack;
-	for (auto const& objs: adjList[root])
+	if (stringToNodeMap.find(target) != stringToNodeMap.end())
 	{
-		pathStack.push(objs);
-	}
+		vector<string> childrenStrings;
 
-	route.push_back("COM");
-	
-	while (!pathStack.empty())
-	{
-		string currentObj = pathStack.top();
-		pathStack.pop();
-		if (currentObj == target)
+		for (auto const* child : stringToNodeMap[target]->GetChildren())
 		{
-			return route;
+			childrenStrings.push_back(child->GetData());
 		}
-		if(adjList.find(currentObj) != adjList.end())
-		{
-			route.push_back(currentObj);
-			
-			for (auto const& childValue : adjList[currentObj])
-				pathStack.push(childValue);
-		}
-		else 
-		{
-			route.pop_back();
-		}
+		return childrenStrings;
 	}
 
 	throw exception("Target not found");
 }
 
-int DiGraph::FindMinOrbitDistance(string const& obj1, string const& obj2)
+std::vector<std::string> OrbitTree::FindRoute(string const& target) const
+{
+	if (root->GetNumberOfChildren() == 0)
+		throw exception("Target not found");
+	
+	vector<string> route;
+	if (FindRoute(target, root, route))
+	{
+		route.insert(route.begin(), root->GetData());
+		return route;
+	}
+
+	throw exception("Target not found");
+}
+
+
+bool OrbitTree::FindRoute(string const& target, Node const* parent, vector<string>& route) const
+{	
+	for (auto const* child : parent->GetChildren())
+	{
+		if (child->GetData() == target)
+		{
+			//route.insert(route.begin(), child->GetData());
+			return true;
+		}
+		if (child->GetNumberOfChildren() > 0)
+		{
+			if (FindRoute(target, child, route))
+			{
+				route.insert(route.begin(), child->GetData());
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+int OrbitTree::FindMinOrbitDistance(string const& obj1, string const& obj2) const
 {
 	auto obj1Route = FindRoute(obj1);
 	auto obj2Route = FindRoute(obj2);

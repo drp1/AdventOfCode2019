@@ -1,23 +1,45 @@
 #pragma once
+#include <utility>
 #include <xstring>
 #include <vector>
 #include <map>
 
-
-class DiGraph
+class Node
 {
 public:
-	DiGraph() = default;
+	explicit Node(std::string data) : data(std::move(data)) {}
+
+	void AddChild(Node* child) { children.push_back(child); }
+	void SetParent(Node* parent) { this->parent = parent; }
+	Node* GetParent() const { return parent; }
+	std::vector<Node*> const& GetChildren() const { return children; }
+	int GetNumberOfChildren() const { return children.size(); }
+	std::string GetData() const { return data; }
+private:
+	std::string data;
+	Node* parent;
+	std::vector<Node*> children;
+};
+
+class OrbitTree
+{
+
+public:
+	OrbitTree();
 	void AddEdge(std::string const& text);
-	int GetOrbitSum();
-	int GetOrbitSum(const std::string& key, int depth);
-	
-	std::vector<std::string> GetConnectedEdges(std::string const& edge);
-	std::vector<std::string> FindRoute(std::string const& target);
-	int FindMinOrbitDistance(std::string const& obj1, std::string const& obj2);
+	int GetOrbitSum() const;
+	int GetOrbitSum(Node const* parent, int depth) const;
+
+	std::vector<std::string> GetChildren(std::string target);
+	std::vector<std::string> FindRoute(std::string const& target) const;
+	bool OrbitTree::FindRoute(std::string const& target, Node const* parent, std::vector<std::string>& route) const;
+	int FindMinOrbitDistance(std::string const& obj1, std::string const& obj2) const;
 
 private:
-	std::map<std::string, std::vector<std::string>> adjList;
 
+	Node* root;
+	std::map<std::string, Node*> stringToNodeMap;
 	
 };
+
+
