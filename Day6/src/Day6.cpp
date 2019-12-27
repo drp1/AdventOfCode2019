@@ -7,46 +7,46 @@ using namespace std;
 
 OrbitTree::OrbitTree()
 {
-	root = new Node("COM");
-	stringToNodeMap[root->GetData()] = root;
+	root = CreateNode("COM");
+}
+
+Node* OrbitTree::CreateNode(std::string const& data)
+{
+	if (FindNode(data) != nullptr)
+		throw exception("Node already exists");
+	
+	Node* newNode = new Node(data);
+	nodes.push_back(newNode);
+	return newNode;
+}
+
+Node* OrbitTree::FindNode(std::string const& data)
+{
+	for (auto const node : nodes)
+	{
+		if (node->GetData() == data)
+			return node;
+	}
+	return nullptr;
 }
 
 void OrbitTree::AddEdge(string const& text)
 {
-	int const separator = text.find(')');
+	auto const separator = text.find(')');
 	string const parentStr = text.substr(0, separator);
 	string const childStr = text.substr(separator + 1, text.length() - separator - 1);
 
-	Node* childNode;
-	Node* parentNode;
-	
-	if(stringToNodeMap.find(parentStr) == stringToNodeMap.end())
-	{
-		// Parent doesn't exist
-		parentNode = new Node(parentStr);
-		stringToNodeMap[parentStr] = parentNode;
-	}
-	else
-	{
-		parentNode = stringToNodeMap[parentStr];
-	}
-	
-	if (stringToNodeMap.find(childStr) == stringToNodeMap.end())
-	{
-		// Child doesn't exist
-		childNode = new Node(childStr);
-		stringToNodeMap[childStr] = childNode;
-	}
-	else
-	{
-		childNode = stringToNodeMap[childStr];
-	}
-	
+	Node* parentNode = FindNode(parentStr);
+	if(parentNode == nullptr)
+		parentNode = CreateNode(parentStr);
+
+	Node* childNode = FindNode(childStr);
+	if (childNode == nullptr)
+		childNode = CreateNode(childStr);
 	
 	childNode->SetParent(parentNode);
 	parentNode->AddChild(childNode);
 }
-
 
 int OrbitTree::GetOrbitSum() const
 {
@@ -69,13 +69,14 @@ int OrbitTree::GetOrbitSum(Node const* parent, int const depth) const
 	return sum;
 }
 
-std::vector<std::string> OrbitTree::GetChildren(std::string target)
+std::vector<std::string> OrbitTree::GetChildren(std::string const& target)
 {
-	if (stringToNodeMap.find(target) != stringToNodeMap.end())
+	Node* targetNode = FindNode(target);
+	if (targetNode != nullptr)
 	{
 		vector<string> childrenStrings;
 
-		for (auto const* child : stringToNodeMap[target]->GetChildren())
+		for (auto const* child : targetNode->GetChildren())
 		{
 			childrenStrings.push_back(child->GetData());
 		}
@@ -139,7 +140,7 @@ int OrbitTree::FindMinOrbitDistance(string const& obj1, string const& obj2) cons
 		{
 			obj1Route.erase(obj1Route.begin());
 			obj2Route.erase(obj2Route.begin());
-			return obj1Route.size() + obj2Route.size();
+			return static_cast<int>(obj1Route.size() + obj2Route.size());
 		}
 	}
 	

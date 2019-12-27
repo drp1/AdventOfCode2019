@@ -13,11 +13,11 @@ public:
 	void SetParent(Node* parent) { this->parent = parent; }
 	Node* GetParent() const { return parent; }
 	std::vector<Node*> const& GetChildren() const { return children; }
-	int GetNumberOfChildren() const { return children.size(); }
+	auto GetNumberOfChildren() const { return children.size(); }
 	std::string GetData() const { return data; }
 private:
 	std::string data;
-	Node* parent;
+	Node* parent = nullptr;
 	std::vector<Node*> children;
 };
 
@@ -26,20 +26,21 @@ class OrbitTree
 
 public:
 	OrbitTree();
+	Node* CreateNode(std::string const& data);
+	Node* FindNode(std::string const& data);
 	void AddEdge(std::string const& text);
 	int GetOrbitSum() const;
 	int GetOrbitSum(Node const* parent, int depth) const;
 
-	std::vector<std::string> GetChildren(std::string target);
+	std::vector<std::string> GetChildren(const std::string& target);
 	std::vector<std::string> FindRoute(std::string const& target) const;
-	bool OrbitTree::FindRoute(std::string const& target, Node const* parent, std::vector<std::string>& route) const;
+	bool FindRoute(std::string const& target, Node const* parent, std::vector<std::string>& route) const;
 	int FindMinOrbitDistance(std::string const& obj1, std::string const& obj2) const;
 
 private:
 
 	Node* root;
-	std::map<std::string, Node*> stringToNodeMap;
-	
+	std::vector<Node*> nodes;
 };
 
 
