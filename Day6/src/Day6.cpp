@@ -10,11 +10,40 @@ OrbitTree::OrbitTree()
 	root = CreateNode("COM");
 }
 
+Node* OrbitTree::CopyTreeRecursively(Node const& parent)
+{
+	Node* parentCopy = CreateNode(parent.GetData());
+	if (parent.GetNumberOfChildren() > 0)
+	{
+		for (auto const* child : parent.GetChildren())
+		{
+			Node* childCopy = CopyTreeRecursively(*child);
+			parentCopy->AddChild(childCopy);
+			childCopy->SetParent(parentCopy);
+		}
+
+	}
+	return parentCopy;
+}
+
+OrbitTree::OrbitTree(OrbitTree const& other)
+{
+	root = CopyTreeRecursively(*other.root);
+}
+
+OrbitTree::~OrbitTree()
+{
+	for (auto const* node : nodes)
+	{
+		delete node;
+	}
+}
+
 Node* OrbitTree::CreateNode(std::string const& data)
 {
 	if (FindNode(data) != nullptr)
 		throw exception("Node already exists");
-	
+
 	Node* newNode = new Node(data);
 	nodes.push_back(newNode);
 	return newNode;
@@ -37,13 +66,13 @@ void OrbitTree::AddEdge(string const& text)
 	string const childStr = text.substr(separator + 1, text.length() - separator - 1);
 
 	Node* parentNode = FindNode(parentStr);
-	if(parentNode == nullptr)
+	if (parentNode == nullptr)
 		parentNode = CreateNode(parentStr);
 
 	Node* childNode = FindNode(childStr);
 	if (childNode == nullptr)
 		childNode = CreateNode(childStr);
-	
+
 	childNode->SetParent(parentNode);
 	parentNode->AddChild(childNode);
 }
@@ -90,7 +119,7 @@ std::vector<std::string> OrbitTree::FindRoute(string const& target) const
 {
 	if (root->GetNumberOfChildren() == 0)
 		throw exception("Target not found");
-	
+
 	vector<string> route;
 	if (FindRoute(target, root, route))
 	{
@@ -103,7 +132,7 @@ std::vector<std::string> OrbitTree::FindRoute(string const& target) const
 
 
 bool OrbitTree::FindRoute(string const& target, Node const* parent, vector<string>& route) const
-{	
+{
 	for (auto const* child : parent->GetChildren())
 	{
 		if (child->GetData() == target)
@@ -129,7 +158,7 @@ int OrbitTree::FindMinOrbitDistance(string const& obj1, string const& obj2) cons
 	auto obj1Route = FindRoute(obj1);
 	auto obj2Route = FindRoute(obj2);
 
-	while(!obj1Route.empty())
+	while (!obj1Route.empty())
 	{
 		if (obj1Route[1] == obj2Route[1])
 		{
@@ -143,6 +172,6 @@ int OrbitTree::FindMinOrbitDistance(string const& obj1, string const& obj2) cons
 			return static_cast<int>(obj1Route.size() + obj2Route.size());
 		}
 	}
-	
+
 	return 1;
 }

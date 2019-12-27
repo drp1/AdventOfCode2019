@@ -26,6 +26,9 @@ class OrbitTree
 
 public:
 	OrbitTree();
+	Node* CopyTreeRecursively(Node const& parent);
+	OrbitTree(OrbitTree const& other);
+	~OrbitTree();
 	Node* CreateNode(std::string const& data);
 	Node* FindNode(std::string const& data);
 	void AddEdge(std::string const& text);
